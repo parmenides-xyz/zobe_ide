@@ -1,9 +1,4 @@
-# Kurtosis - Quantum Markets Implementation for AI Agent Discovery
-
-<div align="center">
-  <img src="packages/frontend/public/bg-fire.png" alt="Kurtosis Logo" width="120" />
-  
-  **Agentic Futarchy: AI-Powered Prediction Markets for Agent Token Launch**
+# Kurtosis - Futarchy for AI agents
 
 ## What is Kurtosis?
 
