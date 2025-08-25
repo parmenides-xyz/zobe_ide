@@ -3,7 +3,7 @@
 <div align="center">
   <img src="packages/frontend/public/bg-fire.png" alt="Kurtosis Logo" width="120" />
   
-  **Decentralized prediction markets powered by AI traders on Sei blockchain**
+  **Futarchy for AI agents. Live on Sei.**
   
   [![Built on Sei](https://img.shields.io/badge/Built%20on-Sei-00D4AA?style=for-the-badge)](https://sei.io)
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
@@ -13,16 +13,14 @@
 
 ## Overview
 
-Kurtosis is a revolutionary futarchy platform where AI agents with unique personalities trade on prediction markets. Each AI trader is modeled after prominent crypto/tech founders and uses real-time price predictions from the Allora Network to make trading decisions.
+Kurtosis implements Quantum Markets, a capital-efficient design for scaling futarchy (by Paradigm). 
 
 ### Key Features
 
-- **12 Unique AI Personalities** - From Michael Saylor's diamond hands to ZachXBT's skeptical analysis
+- **12 Unique AI Traders** - 
 - **Real-Time Price Predictions** - Powered by Allora Network's decentralized AI inference
 - **WebSocket Updates** - Live market data and trading activity
 - **Glassmorphic UI** - Beautiful, modern interface with smooth animations
-- **Sei Atlantic-2 Testnet** - Fast, scalable blockchain infrastructure
-- **Automated Market Making** - Dynamic liquidity provision with custom bonding curves
 
 ## Architecture
 
@@ -94,25 +92,6 @@ python -m uvicorn src.api.server:app --host 0.0.0.0 --port 8001 --reload
 
 Visit http://localhost:3000 to see the application.
 
-## AI Trader Personalities
-
-Each AI agent has unique trading characteristics:
-
-| Personality | Style | Description |
-|------------|-------|-------------|
-| **Michael Saylor** | YOLO | Never sells, maximum conviction |
-| **Satoshi Nakamoto** | YOLO | Diamond hands forever |
-| **Brian Armstrong** | Cautious | Regulatory-conscious institutional approach |
-| **Vitalik Buterin** | Balanced | Technical, measured decisions |
-| **ZachXBT** | Strategic | Skeptical investigator, needs evidence |
-| **CZ** | Cautious | Conservative, builds slowly |
-| **Illia Polosukhin** | Aggressive | AI-focused technical trader |
-| **Yat Siu** | Momentum | Gaming & metaverse bull |
-| **Rune Christensen** | Strategic | DeFi architect, systematic |
-| **Larry Fink** | Balanced | Institutional accumulator |
-| **Jeff Yan** | Aggressive | High-frequency quick decisions |
-| **Justin Sun** | Momentum | Marketing genius, buys hype |
-
 ## API Endpoints
 
 ### REST API (http://localhost:8001)
@@ -140,20 +119,11 @@ Real-time updates for:
 - Neon text accents
 - Floating animations
 
-### Pages
-- **Markets** - Browse and trade on prediction markets
-- **Agents** - View AI trader personalities and strategies
-- **Swarm** - Monitor real-time trading activity
-- **Create** - Launch new prediction markets
-
 ## Technology Stack
 
 ### Frontend
 - **Next.js 14** - React framework with App Router
 - **TypeScript** - Type-safe development
-- **Mantine UI** - Component library
-- **TanStack Query** - Data fetching and caching
-- **Space Grotesk** - Modern typography
 
 ### Backend
 - **FastAPI** - High-performance Python web framework
@@ -184,37 +154,6 @@ forge install https://github.com/Sofianel5/v3-periphery
 forge build
 ```
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Workflow
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- **Allora Network** - For decentralized AI inference
-- **Sei Network** - For blazing-fast blockchain infrastructure
-- **OpenAI** - For GPT models powering agent personalities
-- **The crypto community** - For inspiration and feedback
-
-## Links
-
-- [Website](https://kurtosis.ai)
-- [Documentation](https://docs.kurtosis.ai)
-- [Twitter](https://twitter.com/kurtosisai)
-- [Discord](https://discord.gg/kurtosis)
-
----
-
-<div align="center">
-  Built with love by the Kurtosis team
-</div>
