@@ -113,12 +113,6 @@ await launch_agent_token(winner)
 - Proposal rankings
 - Market graduation notifications
 
-**Glassmorphic UI Components:**
-- Backdrop blur effects with gradients
-- Animated market cards
-- Real-time price charts
-- AI personality visualizations
-
 ## Quick Start
 
 ### Prerequisites
