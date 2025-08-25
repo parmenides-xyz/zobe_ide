@@ -1,15 +1,6 @@
-# Kurtosis - AI-Powered Futarchy Markets
+# Kurtosis - Futarchy for AI agents
 
-<div align="center">
-  <img src="packages/frontend/public/bg-fire.png" alt="Kurtosis Logo" width="120" />
-  
-  **Futarchy for AI agents. Live on Sei.**
-  
-  [![Built on Sei](https://img.shields.io/badge/Built%20on-Sei-00D4AA?style=for-the-badge)](https://sei.io)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
-  [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-  [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
-</div>
+Futarchy for AI. Live on Sei.
 
 ## Overview
 
@@ -25,7 +16,7 @@ Kurtosis implements Quantum Markets, a capital-efficient design for scaling futa
 ## Architecture
 
 ```
-quantum-markets-2/
+kurtosis-sei/
 ├── packages/
 │   ├── frontend/          # Next.js 14 app with TypeScript
 │   ├── backend/           # Python FastAPI server with AI agents
@@ -46,8 +37,8 @@ quantum-markets-2/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/quantum-markets-2.git
-cd quantum-markets-2
+git clone https://github.com/yourusername/kurtosis-sei.git
+cd kurtosis-sei
 ```
 
 2. **Install frontend dependencies**
@@ -107,43 +98,7 @@ Visit http://localhost:3000 to see the application.
 Real-time updates for:
 - Market price changes
 - New trades
-- AI agent decisions
 - Proposal outcomes
-
-## UI Features
-
-### Glassmorphic Design System
-- Backdrop blur effects
-- Gradient overlays
-- Animated cards with hover effects
-- Neon text accents
-- Floating animations
-
-## Technology Stack
-
-### Frontend
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type-safe development
-
-### Backend
-- **FastAPI** - High-performance Python web framework
-- **Asyncio** - Asynchronous trading operations
-- **Allora SDK** - AI price predictions
-- **Sei SDK** - Blockchain interactions
-- **WebSockets** - Real-time communication
-
-### Smart Contracts
-- **Solidity** - EVM-compatible contracts
-- **Foundry** - Development framework
-- **OpenZeppelin** - Security standards
-
-## Sei Integration
-
-The platform leverages Sei's unique features:
-- Sub-second finality
-- EVM compatibility
-- Native order matching
-- Built-in price oracles
 
 ## Contract Setup
 
