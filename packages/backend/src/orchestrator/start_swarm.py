@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Start a swarm of AI proposal agents and traders on Quantum Markets"""
+"""Start a swarm of AI proposal agents and traders on Kurtosis"""
 
 import os
 import asyncio
@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.traders.trader_agent import TraderAgent
 from src.traders.proposal_agent import ProposalAgent
+from src.traders.allora_personalities import get_trader_personality
 from src.agent_token_launcher import AgentTokenLauncher
 
 # Load environment variables
@@ -24,7 +25,14 @@ MARKET_ADDRESS = os.getenv("MARKET_ADDRESS")
 MASTER_PRIVATE_KEY = os.getenv("MASTER_PRIVATE_KEY")
 NUM_TRADERS = int(os.getenv("NUM_TRADERS", "20"))
 NUM_PROPOSAL_AGENTS = int(os.getenv("NUM_PROPOSAL_AGENTS", "10"))
-MARKET_ID = int(os.getenv("MARKET_ID"))
+
+# Read MARKET_ID from file created by create_market.py
+market_file = os.path.join(os.path.dirname(__file__), 'latest_market.txt')
+if os.path.exists(market_file):
+    with open(market_file, 'r') as f:
+        MARKET_ID = int(f.read().strip())
+else:
+    raise ValueError(f"No market ID file found at {market_file}. Run create_market.py first!")
 
 async def fund_with_gas(w3, master_account, trader_address, amount_ether="0.01", nonce=None):
     """Send gas (SEI) to a trader address"""
@@ -45,7 +53,7 @@ async def fund_with_gas(w3, master_account, trader_address, amount_ether="0.01",
     return tx_hash
 
 async def create_trader():
-    """Create a single trader with a new wallet"""
+    """Create a single trader with a new wallet and assigned personality"""
     # Generate new account
     account = Account.create()
     
@@ -55,6 +63,10 @@ async def create_trader():
         mock_usdc_address=MOCK_USDC_ADDRESS,
         market_address=MARKET_ADDRESS
     )
+    
+    # Log the trader's personality
+    personality = get_trader_personality(trader.address)
+    print(f"  Created trader {trader.address[:8]}... → {personality['name']} ({personality['type']})")
     
     return trader
 
@@ -403,7 +415,24 @@ async def trading_loop(traders, proposal_ids):
 
 async def main():
     """Main function to start the swarm"""
-    print("Starting Quantum Markets AI Agent Swarm")
+    print("Starting Kurtosis AI Agent Swarm")
+    print("="*50)
+    
+    # Show AI market conditions that will influence trading
+    print("\n📊 AI Market Analysis (from Allora Network):")
+    from src.traders.allora_personalities import get_ai_token_predictions
+    try:
+        ai_predictions = await get_ai_token_predictions()
+        for token, price in ai_predictions.items():
+            token_name = token.split('/')[0]
+            print(f"  {token_name}: ${price:.2f}")
+        avg_price = sum(ai_predictions.values()) / len(ai_predictions) if ai_predictions else 0
+        market_condition = 'Strong' if avg_price > 55 else 'Weak' if avg_price < 45 else 'Neutral'
+        print(f"  Average: ${avg_price:.2f} ({market_condition} market)")
+        print(f"  → Traders will be {'bullish' if avg_price > 55 else 'bearish' if avg_price < 45 else 'mixed'} on AI agent proposals")
+    except Exception as e:
+        print(f"  Error fetching AI predictions: {e}")
+        print("  Traders will use default strategies")
     print("="*50)
     
     # Initialize master wallet
@@ -414,7 +443,7 @@ async def main():
     master_w3 = Web3(Web3.HTTPProvider(SEI_RPC_URL))
     master_account = Account.from_key(MASTER_PRIVATE_KEY)
     
-    print(f"Master wallet: {master_account.address}")
+    print(f"\nMaster wallet: {master_account.address}")
     balance = master_w3.eth.get_balance(master_account.address)
     print(f"Master balance: {master_w3.from_wei(balance, 'ether')} SEI")
     
@@ -438,14 +467,26 @@ async def main():
         return
     
     # Phase 3: Create Trading Agents
-    print(f"\nPhase 3: Creating {NUM_TRADERS} Trading Agents...")
+    print(f"\nPhase 3: Creating {NUM_TRADERS} Trading Agents with Diverse Personalities...")
     traders = []
+    personality_counts = {}
+    
     for i in range(NUM_TRADERS):
         trader = await create_trader()
         traders.append(trader)
         
-        if i % 100 == 0:
+        # Track personality distribution
+        personality = get_trader_personality(trader.address)
+        personality_key = personality['name']
+        personality_counts[personality_key] = personality_counts.get(personality_key, 0) + 1
+        
+        if i % 100 == 0 and i > 0:
             print(f"  Created {i} traders...")
+    
+    # Show personality distribution
+    print(f"\n📊 Trader Personality Distribution:")
+    for name, count in sorted(personality_counts.items(), key=lambda x: x[1], reverse=True):
+        print(f"  {name}: {count} trader{'s' if count > 1 else ''}")
     
     # Initialize all traders
     await initialize_agents(traders, master_w3, master_account, "trader")

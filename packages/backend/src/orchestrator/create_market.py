@@ -110,8 +110,15 @@ async def create_market():
             # First topic is the event signature, second is the indexed marketId
             market_id = int(receipt['logs'][0]['topics'][1].hex(), 16)
             print(f"Market ID: {market_id}")
-            print(f"\nAdd this to your .env file:")
-            print(f"MARKET_ID={market_id}")
+            
+            # Save market ID to a file for other scripts to use
+            market_file = os.path.join(os.path.dirname(__file__), 'latest_market.txt')
+            with open(market_file, 'w') as f:
+                f.write(str(market_id))
+            print(f"✓ Saved market ID to: {market_file}")
+            
+            # Also show the env var format for backwards compatibility
+            print(f"\n(Optional) Add to .env file: MARKET_ID={market_id}")
     else:
         print(f"Transaction failed!")
         print(f"Receipt: {receipt}")

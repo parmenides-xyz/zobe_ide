@@ -1,5 +1,5 @@
 {
-  "name": "@quantum-markets/backend",
+  "name": "@kurtosis/backend",
   "version": "1.0.0",
   "scripts": {
     "start:swarm": "python src/orchestrator/start_swarm.py",

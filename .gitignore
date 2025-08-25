@@ -14,11 +14,16 @@ __pycache__/
 *.pyd
 venv/
 *.egg-info/
+.pytest_cache/
+*.py[cod]
+*$py.class
 
 # Build outputs
 dist/
 build/
 out/
+.next/
+*.tsbuildinfo
 
 # IDE
 .vscode/
@@ -50,3 +55,5 @@ deployments/localhost/
 *.swo
 *~
 .temp/
+latest_market.txt
+*.backup

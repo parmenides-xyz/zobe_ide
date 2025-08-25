@@ -10,12 +10,14 @@ try:
         encode_permit2_approve,
         calculate_amount_out_minimum
     )
+    from .allora_personalities import get_trading_decision
 except ImportError:
-    from swap_helper import (
+    from src.traders.swap_helper import (
         build_swap_transaction,
         encode_permit2_approve,
         calculate_amount_out_minimum
     )
+    from src.traders.allora_personalities import get_trading_decision
 
 # Load environment variables
 load_dotenv()
@@ -428,12 +430,12 @@ class TraderAgent:
                 # Deposit if not done for this market
                 if not hasattr(self, f'deposited_{market_id}'):
                     deposit_amount = 1000 * 10**18  # Deposit 1000 USDC (enough for many trades)
-                    print(f"Trader {self.address[:8]} depositing {deposit_amount/10**18:.0f} USDC to market {market_id}")
+                    print(f"\nTrader {self.address[:8]} depositing {deposit_amount/10**18:.0f} USDC to market {market_id}")
                     await self.deposit_to_market(market_id, deposit_amount)
                     setattr(self, f'deposited_{market_id}', True)
                 
                 # Claim ALL vUSD for this proposal at once
-                print(f"Trader {self.address[:8]} claiming ALL vUSD for proposal {proposal_id}")
+                print(f"  Claiming vUSD for proposal {proposal_id}")
                 await self.claim_vusd(proposal_id)
                 setattr(self, f'claimed_proposal_{proposal_id}', True)
                 
@@ -471,19 +473,22 @@ class TraderAgent:
             # Get full proposal data with pool keys
             proposal_data = await self.get_proposal_data(proposal_id)
             
-            # Decide trading strategy
-            is_bullish = random.random() > 0.5
-            action = random.choice(['buy', 'sell'])  # Randomly choose to buy or sell
+            # Decide trading strategy using AI-informed personality-based decisions
+            # Get trading decision based on trader's personality and AI market sentiment
+            is_bullish, action = await get_trading_decision(
+                address=self.address,
+                proposal_data={'name': f'Proposal #{proposal_id}', 'id': proposal_id}
+            )
             
             if action == 'sell':
                 # Mint YES/NO tokens first
                 mint_amount = random.randint(10, 100) * 10**18  # Use some of our vUSD to mint
-                print(f"Trader {self.address[:8]} minting {mint_amount/10**18:.0f} vUSD worth of YES/NO for proposal {proposal_id}")
+                print(f"  Minting: {mint_amount/10**18:.0f} vUSD worth of YES/NO tokens")
                 await self.mint_yes_no(proposal_id, mint_amount)
                 
                 if is_bullish:
                     # Bullish - sell NO tokens (we don't believe it will fail)
-                    print(f"Trader {self.address[:8]} selling {mint_amount/10**18:.0f} NO tokens (bullish on proposal {proposal_id})")
+                    print(f"  Executing: SELL {mint_amount/10**18:.0f} NO tokens")
                     await self.execute_swap(
                         pool_key=proposal_data['noPoolKey'],
                         token_in=proposal_data['noToken'],
@@ -493,7 +498,7 @@ class TraderAgent:
                     )
                 else:
                     # Bearish - sell YES tokens (we don't believe it will succeed)
-                    print(f"Trader {self.address[:8]} selling {mint_amount/10**18:.0f} YES tokens (bearish on proposal {proposal_id})")
+                    print(f"  Executing: SELL {mint_amount/10**18:.0f} YES tokens")
                     await self.execute_swap(
                         pool_key=proposal_data['yesPoolKey'],
                         token_in=proposal_data['yesToken'],
@@ -507,7 +512,7 @@ class TraderAgent:
                 
                 if is_bullish:
                     # Bullish - BUY YES tokens (push YES price up)
-                    print(f"Trader {self.address[:8]} buying YES tokens with {buy_amount/10**18:.0f} vUSD (bullish on proposal {proposal_id})")
+                    print(f"  Executing: BUY YES tokens with {buy_amount/10**18:.0f} vUSD")
                     await self.execute_swap(
                         pool_key=proposal_data['yesPoolKey'],
                         token_in=proposal_data['vUSD'],
@@ -517,7 +522,7 @@ class TraderAgent:
                     )
                 else:
                     # Bearish - BUY NO tokens (believe it will fail)
-                    print(f"Trader {self.address[:8]} buying NO tokens with {buy_amount/10**18:.0f} vUSD (bearish on proposal {proposal_id})")
+                    print(f"  Executing: BUY NO tokens with {buy_amount/10**18:.0f} vUSD")
                     await self.execute_swap(
                         pool_key=proposal_data['noPoolKey'],
                         token_in=proposal_data['vUSD'],
@@ -527,7 +532,7 @@ class TraderAgent:
                     )
             
         except Exception as e:
-            print(f"Trade error for {self.address[:8]}: {e}")
+            print(f"\n  Trade error for {self.address[:8]}: {e}")
         
     def get_balance(self):
         """Get MockUSDC balance"""
