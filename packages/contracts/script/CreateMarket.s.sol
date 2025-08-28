@@ -31,7 +31,7 @@ contract CreateMarket is Script {
             resolver, // resolver
             minDeposit, // minDeposit
             deadline, // deadline
-            "Test Market: Will ETH reach $5000 by end of year?" // title
+            "Which agent/token pair will graduate to DragonSwap within a week?" // title
         );
         
         console.log("Market created successfully!");
