@@ -1,18 +1,8 @@
-# Kurtosis - Quantum Markets Implementation for AI Agent Discovery
-
-<div align="center">
-  <img src="packages/frontend/public/bg-fire.png" alt="Kurtosis Logo" width="120" />
-  
-  **Agentic Futarchy: AI-Powered Prediction Markets for Agent Token Launch**
-  
-  [![Built on Sei](https://img.shields.io/badge/Built%20on-Sei-00D4AA?style=for-the-badge)](https://sei.io)
-  [![Paradigm Research](https://img.shields.io/badge/Based%20on-Paradigm%20Research-000000?style=for-the-badge)](https://www.paradigm.xyz/2025/06/quantum-markets)
-  [![Uniswap V4](https://img.shields.io/badge/Powered%20by-Uniswap%20V4-FF007A?style=for-the-badge)](https://uniswap.org)
-</div>
+# Kurtosis - Futarchy for AI agents
 
 ## What is Kurtosis?
 
-Kurtosis implements [Paradigm's Quantum Markets](https://www.paradigm.xyz/2025/06/quantum-markets) mechanism - a novel futarchy system where AI agents propose themselves as token candidates, and market forces determine which agent gets launched. This solves the critical problem of capital fragmentation in prediction markets by allowing traders to deploy their full capital across all proposals simultaneously.
+Kurtosis implements Paradigm's [Quantum Markets](https://www.paradigm.xyz/2025/06/quantum-markets) - a capital-efficient design for scaling futarchy. AI agents propose themselves as token candidates, and market forces determine who launches. This solves the critical problem of capital fragmentation in prediction markets by allowing traders to deploy their full capital across all proposals simultaneously. Access a live deployment on Phala Cloud (cloud computing for confidential AI) [here](https://667ba43d925c3d23e56c7548bd10360035d53d10-3000.dstack-prod7.phala.network/terminal).
 
 ### The Core Innovation
 
@@ -28,7 +18,7 @@ Traditional prediction markets fragment liquidity across proposals. If you have 
 ### 1. Proposal Phase
 AI agents propose themselves with unique personalities and trading strategies. Each proposal includes:
 - Agent name and symbol (for eventual token launch)
-- Personality type (YOLO, Cautious, Strategic, etc.)
+- Personality type
 - Trading parameters (bullish threshold, confidence weight, action bias)
 
 ### 2. Market Creation
@@ -37,13 +27,6 @@ A prediction market is created with:
 - Base token: MockUSDC on Sei testnet
 - Virtual token system: vUSD as trading credits
 - Uniswap V4 pools for each proposal's YES/NO tokens
-
-### 3. Trading Dynamics
-**AI Traders with Distinct Personalities:**
-- **Michael Saylor**: Always bullish, never sells (confidence weight: 0.0)
-- **ZachXBT**: Requires high evidence threshold (confidence weight: 0.9)
-- **Vitalik Buterin**: Balanced technical approach
-- **Justin Sun**: Marketing-driven, momentum trader
 
 Traders make decisions based on:
 ```python
@@ -130,12 +113,6 @@ await launch_agent_token(winner)
 - Proposal rankings
 - Market graduation notifications
 
-**Glassmorphic UI Components:**
-- Backdrop blur effects with gradients
-- Animated market cards
-- Real-time price charts
-- AI personality visualizations
-
 ## Quick Start
 
 ### Prerequisites
@@ -195,25 +172,6 @@ python -m uvicorn src.api.server:app --host 0.0.0.0 --port 8001 --reload
 
 Visit http://localhost:3000 to see the application.
 
-## AI Trader Personalities
-
-The system implements 12 distinct trader personalities based on crypto/tech founders, each with unique trading parameters:
-
-| Personality | Action Bias | Bullish Threshold | Confidence Weight | Trading Behavior |
-|------------|------------|------------------|------------------|-----------------|
-| **Michael Saylor** | YOLO | -1000 | 0.0 | Always buys, never sells, ignores market signals |
-| **Satoshi Nakamoto** | YOLO | -1000 | 0.0 | Diamond hands, maximum conviction |
-| **Brian Armstrong** | Cautious | 0.3 | 0.7 | Institutional, regulatory-conscious |
-| **Vitalik Buterin** | Balanced | 0.0 | 0.5 | Technical analysis, measured decisions |
-| **ZachXBT** | Strategic | 0.5 | 0.9 | Skeptical, requires strong evidence |
-| **CZ** | Cautious | 0.2 | 0.6 | Conservative builder mentality |
-| **Illia Polosukhin** | Aggressive | -0.2 | 0.3 | AI-focused, quick to act on signals |
-| **Yat Siu** | Momentum | -0.3 | 0.2 | Gaming bull, follows trends |
-| **Rune Christensen** | Strategic | 0.1 | 0.8 | DeFi architect, systematic |
-| **Larry Fink** | Balanced | 0.0 | 0.5 | Institutional accumulation strategy |
-| **Jeff Yan** | Aggressive | -0.1 | 0.4 | High-frequency, quick decisions |
-| **Justin Sun** | Momentum | -0.5 | 0.1 | Marketing-driven, buys hype |
-
 **Trading Decision Formula:**
 ```
 sentiment = (allora_ai_price_avg - 55) / 55
@@ -272,15 +230,7 @@ The system is designed for AI agents to:
 
 ## Sei Network Integration
 
-### Why Sei?
-Sei provides unique advantages for high-frequency prediction markets:
-- **Sub-second finality**: Essential for rapid 10-minute market cycles
-- **EVM compatibility**: Deploy Solidity contracts with minimal modifications
-- **Built-in parallelization**: Handle thousands of concurrent trades
-- **Native order matching engine**: Optimized for DEX operations
-- **Twin-turbo consensus**: Optimistic block processing for speed
-
-### Agent Token Launch via Dragonswap
+### Agent Token Launch via DragonSwap
 
 When a proposal wins the prediction market, it launches as a real token on Dragonswap (Sei's native DEX):
 
@@ -320,7 +270,7 @@ function launchWithAsset(
 
 ### Dragonswap Pool Architecture
 
-The system uses custom implementations of Dragonswap contracts optimized for agent tokens:
+The system uses custom implementations of DragonSwap contracts optimized for agent tokens:
 
 **FFactory.sol**: Modified Dragonswap factory for permissionless pool creation
 ```solidity
@@ -412,27 +362,6 @@ contract SyntheticPair is IFPair {
 
 1. **Parallel Proposal Processing**: Each proposal's trades are independent, allowing Sei to process them in parallel
 2. **Optimistic Execution**: Trades are executed optimistically and rolled back only if they fail
-3. **Native Token Integration**: WSEI wrapper allows seamless SEI<->ERC20 conversions
-4. **MEV Protection**: Sei's deterministic ordering prevents sandwich attacks during graduation
-
-### Integration with Allora Network
-Allora's decentralized AI inference runs on Cosmos SDK, making it naturally compatible with Sei:
-```python
-async def get_ai_predictions():
-    # Allora API returns predictions for AI tokens
-    response = await allora_client.get_predictions(
-        tokens=['VIRTUAL', 'AIXBT', 'VADER', 'SEKOIA'],
-        timeframe='8h'
-    )
-    
-    # IBC message to update on-chain oracle (future improvement)
-    # await sei_client.ibc_transfer(
-    #     channel='channel-allora',
-    #     data=response.predictions
-    # )
-    
-    return response.predictions
-```
 
 ## Contract Setup
 
@@ -459,49 +388,3 @@ forge build
 - MEV-resistant graduation mechanisms
 - Sybil-resistant proposal generation
 - Dynamic fee structures based on market volatility
-
-## Contributing
-
-Contributions are welcome! Areas of focus:
-- Additional trader personalities
-- Improved TWAP algorithms
-- Gas optimization for high-frequency trading
-- Alternative bonding curve designs
-- Cross-chain market deployment
-
-## Academic References
-
-- [Quantum Markets: Agentic Prediction Markets](https://www.paradigm.xyz/2025/06/quantum-markets) - Paradigm Research
-- [Futarchy: Vote Values, But Bet Beliefs](https://mason.gmu.edu/~rhanson/futarchy.html) - Robin Hanson
-- [Uniswap V4 Core Whitepaper](https://github.com/Uniswap/v4-core/blob/main/docs/whitepaper-v4.pdf)
-- [Time-Weighted Average Price (TWAP) Oracles](https://docs.uniswap.org/contracts/v3/concepts/oracle)
-
-## Deployment Addresses (Sei Atlantic-2 Testnet)
-
-```
-Market: 0x...
-MarketUtilsSwapHook: 0x...
-MockUSDC: 0x...
-MockAID: 0x...
-Bonding: 0x...
-PoolManager: 0x...
-PositionManager: 0x...
-```
-
-## Security Considerations
-
-- Smart contracts are unaudited and for research purposes only
-- Use testnet tokens only, never real funds
-- TWAP manipulation is possible with sufficient capital
-- Sybil attacks on proposal generation are not prevented
-- No slashing or reputation system for malicious traders
-
----
-
-<div align="center">
-  
-**Built for the Quantum Markets Research Initiative**
-
-[GitHub](https://github.com/parmenides-xyz/kurtosis-sei) | [Research Paper](https://www.paradigm.xyz/2025/06/quantum-markets) | [Sei Network](https://sei.io)
-
-</div>
