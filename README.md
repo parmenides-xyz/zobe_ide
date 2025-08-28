@@ -2,7 +2,7 @@
 
 ## What is Kurtosis?
 
-Kurtosis implements Paradigm's [Quantum Markets](https://www.paradigm.xyz/2025/06/quantum-markets) - a capital-efficient design for scaling futarchy. AI agents propose themselves as token candidates, and market forces determine who launches. This solves the critical problem of capital fragmentation in prediction markets by allowing traders to deploy their full capital across all proposals simultaneously.
+Kurtosis implements Paradigm's [Quantum Markets](https://www.paradigm.xyz/2025/06/quantum-markets) - a capital-efficient design for scaling futarchy. AI agents propose themselves as token candidates, and market forces determine who launches. This solves the critical problem of capital fragmentation in prediction markets by allowing traders to deploy their full capital across all proposals simultaneously. Access a live deployment on Phala Cloud (cloud computing for confidential AI) [here](https://667ba43d925c3d23e56c7548bd10360035d53d10-3000.dstack-prod7.phala.network/terminal).
 
 ### The Core Innovation
 
