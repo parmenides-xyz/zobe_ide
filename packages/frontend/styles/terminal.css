@@ -1,0 +1,319 @@
+/* Terminal Theme Styles */
+.terminal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at top, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+    #0a0a0f;
+  z-index: -1;
+}
+
+.terminal-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(102, 126, 234, 0.03) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(102, 126, 234, 0.03) 3px
+    );
+  pointer-events: none;
+  animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(10px); }
+}
+
+.terminal-card {
+  background: rgba(13, 13, 20, 0.9) !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  border-radius: 0 !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 0 20px rgba(102, 126, 234, 0.2),
+    inset 0 0 20px rgba(102, 126, 234, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+
+.ascii-logo {
+  color: #667eea;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: left;
+  margin: 10px 0 5px 0;
+  padding-left: 10px;
+  display: block;
+  text-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+}
+
+.system-info {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 4px;
+}
+
+.terminal-system-text {
+  color: #00ff00;
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
+}
+
+.terminal-text {
+  color: #e0e0e0;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.terminal-header {
+  color: #667eea;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terminal-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: blink 2s infinite;
+}
+
+.terminal-indicator.online {
+  background: #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+}
+
+.terminal-indicator.active {
+  background: #667eea;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.terminal-badge {
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid;
+}
+
+.terminal-badge.online {
+  background: rgba(0, 255, 0, 0.1);
+  border-color: rgba(0, 255, 0, 0.5);
+  color: #00ff00;
+}
+
+.terminal-badge.active {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.5);
+  color: #667eea;
+}
+
+.terminal-badge.stop {
+  background: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.5);
+  color: #ff0000;
+}
+
+.terminal-value {
+  font-family: 'Monaco', 'Courier New', monospace;
+  color: #ffffff;
+}
+
+.terminal-value.positive {
+  color: #00ff00;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.terminal-value.negative {
+  color: #ff0000;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.terminal-dim {
+  color: #606060;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.agent-row {
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  margin-bottom: 4px;
+  transition: all 0.2s;
+}
+
+.agent-row:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.order-row {
+  padding: 4px 8px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  transition: background 0.2s;
+}
+
+.order-row.ask {
+  background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.05));
+}
+
+.order-row.bid {
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.05));
+}
+
+.order-row:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.terminal-spread {
+  color: #ffff00;
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 0, 0.3);
+  background: rgba(255, 255, 0, 0.05);
+}
+
+.terminal-log {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  padding: 10px;
+  border-radius: 4px;
+  position: relative;
+}
+
+.terminal-log-text {
+  color: #00ff00;
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-shadow: 0 0 2px rgba(0, 255, 0, 0.3);
+  line-height: 1.6;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: #00ff00;
+  animation: cursor-blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.terminal-button {
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.5);
+  color: #667eea;
+  transition: all 0.3s;
+}
+
+.terminal-button:hover {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+}
+
+.terminal-launch-button {
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: 2px solid transparent;
+  color: white;
+  padding: 16px 32px;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.terminal-launch-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #00ff00, #667eea, #764ba2, #00ff00);
+  border-radius: 8px;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s;
+  animation: rotate 3s linear infinite;
+}
+
+.terminal-launch-button:hover::before {
+  opacity: 1;
+}
+
+.terminal-launch-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 30px rgba(102, 126, 234, 0.4),
+    0 0 60px rgba(102, 126, 234, 0.3);
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Progress bar styling for AMM pools */
+.terminal-progress {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 2px;
+}
+
+.terminal-progress .mantine-Progress-bar {
+  background: linear-gradient(90deg, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 0.4));
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Scrollbar styling */
+.terminal-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal-log::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.terminal-log::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.5);
+  border-radius: 4px;
+}
+
+.terminal-log::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.7);
+}

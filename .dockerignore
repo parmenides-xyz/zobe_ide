@@ -1,0 +1,31 @@
+# Python
+*.pyc
+__pycache__/
+venv/
+.env.local
+*.egg-info/
+
+# Node
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md
+docs/
+
+# Tests
+tests/
+test/
+*.test.js
+*.spec.js

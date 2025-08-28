@@ -1,5 +1,5 @@
 import { NavLink, Stack, Text } from '@mantine/core';
-import { IconChartLine, IconRobot, IconNetwork, IconBrain } from '@tabler/icons-react';
+import { IconChartLine, IconRobot, IconNetwork, IconBrain, IconTerminal2 } from '@tabler/icons-react';
 import { useRouter, usePathname } from 'next/navigation';
 
 export function NavigationLinks() {
@@ -8,19 +8,9 @@ export function NavigationLinks() {
   
   const navItems = [
     { 
-      path: '/', 
-      label: 'AI Markets', 
-      icon: IconChartLine 
-    },
-    { 
-      path: '/agents', 
-      label: 'Agent Personalities', 
-      icon: IconRobot 
-    },
-    { 
-      path: '/swarm', 
-      label: 'Swarm Control', 
-      icon: IconNetwork 
+      path: '/terminal', 
+      label: 'Trading Terminal', 
+      icon: IconTerminal2 
     }
   ];
 

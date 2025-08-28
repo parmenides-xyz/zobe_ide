@@ -1,14 +1,16 @@
-/* Global font family */
+/* Global font family - JetBrains Mono for terminal aesthetic */
 * {
-  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 html,
 body {
-  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'JetBrains Mono', monospace;
+  background: #0a0a0f;
+  color: #e0e0e0;
 }
 
-/* Apply Space Grotesk to all Mantine components */
+/* Apply JetBrains Mono to all Mantine components */
 .mantine-Title-root,
 .mantine-Text-root,
 .mantine-Button-root,
@@ -21,7 +23,7 @@ body {
 .mantine-Grid-root,
 .mantine-Alert-root,
 .mantine-NumberInput-root {
-  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important;
+  font-family: 'JetBrains Mono', monospace !important;
 }
 
 a {

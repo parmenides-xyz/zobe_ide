@@ -122,6 +122,8 @@ class SwarmStatus(BaseModel):
     total_trades: int
     is_running: bool
     process_id: Optional[str] = None
+    leading_proposal: Optional[int] = None
+    leading_price: Optional[float] = None
 
 class ProposalRequest(BaseModel):
     market_id: int
@@ -144,6 +146,17 @@ class MarketInfo(BaseModel):
     is_graduated: bool
     winning_proposal: Optional[int]
     total_volume: Optional[float]
+
+class MarketStats(BaseModel):
+    market_id: int
+    title: str
+    deadline: int
+    is_graduated: bool
+    winning_proposal: Optional[int]
+    total_volume: Optional[float]
+    traders_count: int
+    proposals_count: int
+    status: str
 
 class HealthResponse(BaseModel):
     status: str
@@ -339,6 +352,48 @@ async def get_market(market_id: int):
         total_volume=market.get("total_volume")
     )
 
+@app.get("/api/markets/stats/{market_id}", response_model=MarketStats)
+async def get_market_stats(market_id: int):
+    """Get comprehensive stats for a specific market including traders and proposals"""
+    # Get trader and proposal counts from state
+    traders_count = len([t for t_id, t in state.active_traders.items() if t.get("market_id") == market_id])
+    proposals_count = len([p_id for p_id, p in state.active_proposals.items() if p["market_id"] == market_id])
+    
+    # Check if swarm is running
+    is_running = market_id in state.swarm_processes
+    status = "ACTIVE" if is_running else "IDLE"
+    
+    # Check if market exists in active_markets
+    if market_id in state.active_markets:
+        market = state.active_markets[market_id]
+        title = market.get("title", "AI Agent Launch Market")
+        deadline = market.get("deadline", int((datetime.now() + timedelta(minutes=10)).timestamp()))
+    else:
+        title = "AI Agent Launch Market"
+        deadline = int((datetime.now() + timedelta(minutes=10)).timestamp())
+    
+    # Check if market is graduated
+    try:
+        launcher = AgentTokenLauncher()
+        winning_proposal = launcher.get_winning_proposal(market_id)
+        is_graduated = winning_proposal is not None
+        winning_id = winning_proposal['id'] if winning_proposal else None
+    except:
+        is_graduated = False
+        winning_id = None
+    
+    return MarketStats(
+        market_id=market_id,
+        title=title,
+        deadline=deadline,
+        is_graduated=is_graduated,
+        winning_proposal=winning_id,
+        total_volume=0,  # Would need to calculate from trades
+        traders_count=traders_count,
+        proposals_count=proposals_count,
+        status=status
+    )
+
 @app.get("/api/markets", response_model=List[MarketInfo])
 async def list_markets():
     """List all active markets - only return the real one from latest_market.txt"""
@@ -350,8 +405,25 @@ async def list_markets():
         with open(market_file, "r") as f:
             try:
                 market_id = int(f.read().strip())
+                
+                # Get trader and proposal counts from state
+                traders_count = len([t for t_id, t in state.active_traders.items() if t.get("market_id") == market_id])
+                proposals_count = len([p_id for p_id, p in state.active_proposals.items() if p["market_id"] == market_id])
+                
                 # For now, just return this one real market
                 # In production, you'd query the blockchain for all markets
+                market_info = {
+                    "market_id": market_id,
+                    "title": "AI Agent Launch Market",
+                    "deadline": int((datetime.now() + timedelta(minutes=10)).timestamp()),
+                    "is_graduated": False,
+                    "winning_proposal": None,
+                    "total_volume": None,
+                    "traders_count": traders_count,
+                    "proposals_count": proposals_count
+                }
+                
+                # Also include these in a MarketInfo compatible format
                 markets.append(MarketInfo(
                     market_id=market_id,
                     title="AI Agent Launch Market",
@@ -401,9 +473,9 @@ async def launch_swarm(request: LaunchSwarmRequest, background_tasks: Background
                 # Path to start_swarm.py
                 swarm_script = Path(__file__).parent.parent / "orchestrator" / "start_swarm.py"
 
-                # Run as subprocess to capture output
+                # Run as subprocess to capture output - UNBUFFERED FOR REAL-TIME STREAMING
                 process = await asyncio.create_subprocess_exec(
-                    sys.executable, str(swarm_script),
+                    sys.executable, "-u", str(swarm_script),  # -u flag forces unbuffered stdout
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.STDOUT,
                     env=env
@@ -422,19 +494,109 @@ async def launch_swarm(request: LaunchSwarmRequest, background_tasks: Background
                             "timestamp": datetime.now().isoformat()
                         })
                         
-                        # Parse special messages
-                        if "Proposal created" in message:
-                            await ws_manager.broadcast({
-                                "type": "proposal_created",
-                                "market_id": market_id,
-                                "message": message
-                            })
-                        elif "Trade executed" in message:
+                        # Parse special messages and update state
+                        if "Created trader" in message:
+                            # Extract trader address from log: "Created trader 0x1234... → Name (Type)"
+                            if "..." in message:
+                                addr_start = message.find("0x")
+                                if addr_start != -1:
+                                    addr_end = message.find("...", addr_start)
+                                    if addr_end != -1:
+                                        trader_addr = message[addr_start:addr_end]
+                                        # Extract personality info
+                                        arrow_idx = message.find("→")
+                                        if arrow_idx != -1:
+                                            personality_info = message[arrow_idx+1:].strip()
+                                        else:
+                                            personality_info = "Unknown"
+                                        
+                                        # Add to active traders
+                                        trader_id = f"{market_id}_{trader_addr}"
+                                        state.active_traders[trader_id] = {
+                                            "market_id": market_id,
+                                            "address": trader_addr,
+                                            "personality": personality_info,
+                                            "balance": 0,
+                                            "trades": 0,
+                                            "created_at": datetime.now().isoformat()
+                                        }
+                                        logger.info(f"Added trader {trader_addr} to market {market_id}")
+                        
+                        elif "created proposal ID" in message:
+                            # Extract proposal ID from log: "ProposalAgent X created proposal ID Y"
+                            try:
+                                parts = message.split("proposal ID")
+                                if len(parts) > 1:
+                                    proposal_id = int(parts[1].strip())
+                                    # Add to active proposals
+                                    state.active_proposals[proposal_id] = {
+                                        "market_id": market_id,
+                                        "id": proposal_id,
+                                        "created_at": datetime.now().isoformat()
+                                    }
+                                    logger.info(f"Added proposal {proposal_id} to market {market_id}")
+                                    
+                                    await ws_manager.broadcast({
+                                        "type": "proposal_created",
+                                        "market_id": market_id,
+                                        "proposal_id": proposal_id,
+                                        "message": message
+                                    })
+                            except (ValueError, IndexError) as e:
+                                logger.warning(f"Could not parse proposal ID from: {message}")
+                        
+                        elif "Trade executed" in message or "trade completed" in message.lower():
+                            # Update trade count for traders
+                            for trader_id, trader_data in state.active_traders.items():
+                                if trader_data.get("market_id") == market_id:
+                                    trader_data["trades"] = trader_data.get("trades", 0) + 1
+                                    break  # Just increment for one trader for now
+                            
                             await ws_manager.broadcast({
                                 "type": "trade_executed",
                                 "market_id": market_id,
                                 "message": message
                             })
+                        
+                        elif "MarketMax" in message or "TWAP" in message:
+                            # Parse MarketMax/TWAP updates: "MarketMax updated: Proposal X with price Y"
+                            if "Proposal" in message and "price" in message:
+                                try:
+                                    # Extract proposal ID
+                                    prop_start = message.find("Proposal") + 9
+                                    prop_end = message.find(" ", prop_start)
+                                    if prop_end == -1:
+                                        prop_end = message.find("with", prop_start)
+                                    proposal_id = int(message[prop_start:prop_end].strip())
+                                    
+                                    # Extract price
+                                    price_start = message.find("price") + 6
+                                    price_str = message[price_start:].strip()
+                                    # Remove any trailing text
+                                    price_parts = price_str.split()[0]
+                                    price = float(price_parts)
+                                    
+                                    # Update market state
+                                    if market_id in state.active_markets:
+                                        state.active_markets[market_id]["leading_proposal"] = proposal_id
+                                        state.active_markets[market_id]["leading_price"] = price
+                                    else:
+                                        state.active_markets[market_id] = {
+                                            "leading_proposal": proposal_id,
+                                            "leading_price": price
+                                        }
+                                    
+                                    logger.info(f"MarketMax updated: Proposal {proposal_id} at price {price}")
+                                    
+                                    await ws_manager.broadcast({
+                                        "type": "marketmax_update",
+                                        "market_id": market_id,
+                                        "proposal_id": proposal_id,
+                                        "price": price,
+                                        "message": message
+                                    })
+                                except (ValueError, IndexError) as e:
+                                    logger.warning(f"Could not parse MarketMax from: {message}")
 
                 # Wait for process to complete
                 await process.wait()
@@ -493,13 +655,23 @@ async def get_swarm_status(market_id: int):
     # Get proposals
     proposals = [p_id for p_id, p in state.active_proposals.items() if p["market_id"] == market_id]
 
+    # Try to get leading proposal from state
+    leading_proposal = None
+    leading_price = None
+    if market_id in state.active_markets:
+        market = state.active_markets[market_id]
+        leading_proposal = market.get("leading_proposal")
+        leading_price = market.get("leading_price")
+
     return SwarmStatus(
         market_id=market_id,
         active_traders=len(traders),
         active_proposals=proposals,
         total_trades=sum(t.get("trades", 0) for t in traders),
         is_running=is_running,
-        process_id=process_id
+        process_id=process_id,
+        leading_proposal=leading_proposal,
+        leading_price=leading_price
     )
 
 @app.post("/api/swarm/stop/{market_id}")
@@ -544,8 +716,22 @@ async def get_traders(market_id: int):
 
 @app.get("/api/personalities")
 async def get_personalities():
-    """Get available trader personalities"""
-    return {"personalities": TRADER_PERSONALITIES}
+    """Get available trader personalities with additional metadata for frontend"""
+    # Transform personalities to include more useful fields for frontend
+    personalities_with_metadata = []
+    for p in TRADER_PERSONALITIES:
+        # Extract key info for frontend display
+        personality = {
+            "name": p["name"],
+            "type": p["type"],
+            "description": p["description"],
+            "action_bias": p["action_bias"],
+            "risk_tolerance": int((1 - p["bullish_threshold"]) * 100),  # Convert to 0-100 scale
+            "focus": "AI" if "AI" in p["description"] or "technical" in p["description"] else "Market"
+        }
+        personalities_with_metadata.append(personality)
+    
+    return personalities_with_metadata
 
 # WebSocket endpoint for real-time updates
 @app.websocket("/ws")

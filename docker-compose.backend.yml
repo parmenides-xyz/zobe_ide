@@ -37,32 +37,11 @@ services:
       - kurtosis-data:/app/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8001/health')"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
-    networks:
-      - kurtosis-network
-
-  kurtosis-frontend:
-    image: parmenidesxyz/kurtosis-frontend:latest
-    container_name: kurtosis-frontend
-    ports:
-      - "${FRONTEND_PORT:-3000}:3000"
-    environment:
-      - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://kurtosis-api:8001
-      - NEXT_PUBLIC_WS_URL=ws://kurtosis-api:8001/ws
-    depends_on:
-      - kurtosis-api
-    restart: unless-stopped
-    networks:
-      - kurtosis-network
-
-networks:
-  kurtosis-network:
-    driver: bridge
 
 volumes:
   kurtosis-data:

@@ -2,7 +2,11 @@
  * API client for Kurtosis backend
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+const API_URL = typeof window !== 'undefined' 
+  ? (window.location.hostname.includes('phala.network') 
+    ? `https://${window.location.hostname.replace('-3000', '-8001')}` 
+    : 'http://localhost:8001')
+  : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
 export interface Market {
   market_id: number;
@@ -30,9 +34,9 @@ export interface TraderPersonality {
   name: string;
   type: string;
   description: string;
-  bullish_threshold: number;
-  confidence_weight: number;
   action_bias: string;
+  risk_tolerance: number;
+  focus: string;
 }
 
 export interface SwarmStatus {
@@ -42,6 +46,7 @@ export interface SwarmStatus {
   total_trades: number;
   is_running: boolean;
   process_id?: string;
+  leading_proposal?: number;
 }
 
 class KurtosisAPI {
@@ -120,48 +125,6 @@ class KurtosisAPI {
     return res.json();
   }
 
-  // WebSocket connection
-  connectWebSocket(onMessage: (data: any) => void): WebSocket {
-    const wsUrl = this.baseUrl.replace('http', 'ws') + '/ws';
-    const ws = new WebSocket(wsUrl);
-
-    ws.onopen = () => {
-      console.log('Connected to Kurtosis WebSocket');
-      // Send ping every 30 seconds to keep connection alive
-      const pingInterval = setInterval(() => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ type: 'ping' }));
-        } else {
-          clearInterval(pingInterval);
-        }
-      }, 30000);
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        console.log('WebSocket message:', data);
-        onMessage(data);
-      } catch (e) {
-        console.error('Failed to parse WebSocket message:', e);
-      }
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    ws.onclose = () => {
-      console.log('Disconnected from Kurtosis WebSocket');
-      // Auto-reconnect after 3 seconds
-      setTimeout(() => {
-        console.log('Attempting to reconnect WebSocket...');
-        this.connectWebSocket(onMessage);
-      }, 3000);
-    };
-
-    return ws;
-  }
 }
 
 export const api = new KurtosisAPI();

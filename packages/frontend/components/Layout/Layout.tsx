@@ -9,13 +9,12 @@ import {
   Badge,
   useMantineTheme,
 } from '@mantine/core';
-import { useDisclosure, useFavicon, useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import '@mantine/notifications/styles.css';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import icon from '@/public/bg-fire.png';
-import _favicon from '@/public/bg-fire.png';
 import { NavigationLinks } from './NavigationLinks';
 
 export type LayoutProps = {
@@ -28,8 +27,6 @@ export function Layout(props: LayoutProps) {
   const isTiny = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
-
-  useFavicon(_favicon.src);
 
   return (
     <div>
@@ -94,9 +91,7 @@ export function Layout(props: LayoutProps) {
                   <Title 
                     order={!isTiny ? 3 : 4}
                     style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
+                      color: 'white',
                       fontWeight: 700
                     }}
                   >
@@ -106,19 +101,6 @@ export function Layout(props: LayoutProps) {
               </Link>
             </Group>
 
-            <Badge 
-              size="lg" 
-              variant="gradient"
-              gradient={{ from: 'teal', to: 'lime', deg: 45 }}
-              style={{ 
-                padding: '8px 16px',
-                background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(132, 204, 22, 0.2))',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(20, 184, 166, 0.3)'
-              }}
-            >
-              Testnet (atlantic-2)
-            </Badge>
 
             <div />
           </Flex>

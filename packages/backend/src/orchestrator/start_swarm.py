@@ -101,7 +101,7 @@ async def initialize_agents(agents, master_w3, master_account, agent_type="trade
         
         for j, agent in enumerate(batch):
             # Proposal agents need more gas for creating proposals
-            gas_amount = "0.5" if agent_type == "proposal" else "0.01"
+            gas_amount = "0.5" if agent_type == "proposal" else "0.1"
             # Use sequential nonces to avoid conflicts
             nonce = base_nonce + nonce_offset + j
             task = fund_with_gas(master_w3, master_account, agent.address, gas_amount, nonce)
