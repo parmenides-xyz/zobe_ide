@@ -1,17 +1,11 @@
 # Docker Compose for Phala Cloud deployment with separate frontend
 # This is for frontend-only deployment that connects to a separate backend
+# The image parmenidesxyz/kurtosis-frontend:phala has the backend URL baked in
 
 services:
   kurtosis-frontend:
     image: parmenidesxyz/kurtosis-frontend:phala
     container_name: kurtosis-frontend
-    build:
-      context: ./packages/frontend
-      dockerfile: Dockerfile
-      args:
-        # These are baked into the build for Phala deployment
-        NEXT_PUBLIC_API_URL: https://7cdb6ebb4d8688ed3c25b241bc6e76d9e2b16241-8001.dstack-prod7.phala.network
-        NEXT_PUBLIC_WS_URL: wss://7cdb6ebb4d8688ed3c25b241bc6e76d9e2b16241-8001.dstack-prod7.phala.network/ws
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     environment:
