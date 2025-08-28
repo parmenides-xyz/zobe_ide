@@ -4,7 +4,7 @@
 
 const API_URL = typeof window !== 'undefined' 
   ? (window.location.hostname.includes('phala.network') 
-    ? `https://${window.location.hostname.replace('-3000', '-8001')}` 
+    ? 'https://7cdb6ebb4d8688ed3c25b241bc6e76d9e2b16241-8001.dstack-prod7.phala.network' 
     : 'http://localhost:8001')
   : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
