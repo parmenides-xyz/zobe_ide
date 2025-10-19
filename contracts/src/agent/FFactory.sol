@@ -5,13 +5,11 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 
-import "./FPairV2.sol";
+import "./FPair.sol";
+import "./SyntheticPair.sol";
 
-contract FFactoryV2 is
-    Initializable,
-    AccessControlUpgradeable,
-    ReentrancyGuardUpgradeable
-{
+
+contract FFactory is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant CREATOR_ROLE = keccak256("CREATOR_ROLE");
 
@@ -24,8 +22,7 @@ contract FFactoryV2 is
     address public taxVault;
     uint256 public buyTax;
     uint256 public sellTax;
-    uint256 public antiSniperBuyTaxStartValue; // Starting tax value for anti-sniper (in basis points)
-    address public antiSniperTaxVault;
+    uint public multiplier;
 
     event PairCreated(
         address indexed tokenA,
@@ -34,64 +31,55 @@ contract FFactoryV2 is
         uint
     );
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() {
-        _disableInitializers();
-    }
-
     function initialize(
         address taxVault_,
         uint256 buyTax_,
         uint256 sellTax_,
-        uint256 antiSniperBuyTaxStartValue_,
-        address antiSniperTaxVault_
+        uint multiplier_
     ) external initializer {
         __AccessControl_init();
         __ReentrancyGuard_init();
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
 
+        require(buyTax <= 100, "Buy Tax must be a percentage between 0 to 100");
+        require(sellTax <= 100, "Sell Tax must be a percentage between 0 to 100");
+
         taxVault = taxVault_;
         buyTax = buyTax_;
         sellTax = sellTax_;
-        antiSniperBuyTaxStartValue = antiSniperBuyTaxStartValue_;
-        antiSniperTaxVault = antiSniperTaxVault_;
+        multiplier = multiplier_;
     }
 
     function _createPair(
         address tokenA,
-        address tokenB,
-        uint256 startTime,
-        uint256 startTimeDelay
+        address tokenB
     ) internal returns (address) {
         require(tokenA != address(0), "Zero addresses are not allowed.");
         require(tokenB != address(0), "Zero addresses are not allowed.");
         require(router != address(0), "No router");
 
-        FPairV2 pair_ = new FPairV2(
-            router,
-            tokenA,
-            tokenB,
-            startTime,
-            startTimeDelay
-        );
+        SyntheticPair pair_ = new SyntheticPair(router, tokenA, tokenB, multiplier);
 
         _pair[tokenA][tokenB] = address(pair_);
         _pair[tokenB][tokenA] = address(pair_);
 
         pairs.push(address(pair_));
 
-        emit PairCreated(tokenA, tokenB, address(pair_), pairs.length);
+        uint n = pairs.length;
+
+        emit PairCreated(tokenA, tokenB, address(pair_), n);
 
         return address(pair_);
     }
 
+    // TokenA should always be the new token and tokenB should be the assetToken
     function createPair(
         address tokenA,
-        address tokenB,
-        uint256 startTime,
-        uint256 startTimeDelay
+        address tokenB
     ) external onlyRole(CREATOR_ROLE) nonReentrant returns (address) {
-        return _createPair(tokenA, tokenB, startTime, startTimeDelay);
+        address pair = _createPair(tokenA, tokenB);
+
+        return pair;
     }
 
     function getPair(
@@ -108,17 +96,15 @@ contract FFactoryV2 is
     function setTaxParams(
         address newVault_,
         uint256 buyTax_,
-        uint256 sellTax_,
-        uint256 antiSniperBuyTaxStartValue_,
-        address antiSniperTaxVault_
+        uint256 sellTax_
     ) public onlyRole(ADMIN_ROLE) {
         require(newVault_ != address(0), "Zero addresses are not allowed.");
+        require(buyTax <= 100, "Buy Tax must be a percentage between 0 to 100");
+        require(sellTax <= 100, "Sell Tax must be a percentage between 0 to 100");
 
         taxVault = newVault_;
         buyTax = buyTax_;
         sellTax = sellTax_;
-        antiSniperBuyTaxStartValue = antiSniperBuyTaxStartValue_;
-        antiSniperTaxVault = antiSniperTaxVault_;
     }
 
     function setRouter(address router_) public onlyRole(ADMIN_ROLE) {

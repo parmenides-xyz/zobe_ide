@@ -1,0 +1,80 @@
+{
+  "../packages/contracts/lib/openzeppelin-contracts-upgradeable": {
+    "rev": "e725abddf1e01cf05ace496e950fc8e243cc7cab"
+  },
+  "lib/protocol-contracts": {
+    "rev": "ce22e77af2bc7f8de8629fc82957318c57d8bedb"
+  },
+  "lib/openzeppelin-contracts": {
+    "rev": "1cf13771092c83a060eaef0f8809493fb4c04eb1"
+  },
+  "../cds": {
+    "rev": "55aee8fd0e3b86f9568b53d2be2e06f9654a7562"
+  },
+  "lib/v4-core": {
+    "rev": "59d3ecf53afa9264a16bba0e38f4c5d2231f80bc"
+  },
+  "lib/universal-router": {
+    "rev": "3663f6db6e2fe121753cd2d899699c2dc75dca86"
+  },
+  "../kilolend": {
+    "rev": "b704801e00ad328ca964a57af44c88ae26d3be92"
+  },
+  "../packages/contracts/lib/forge-std": {
+    "rev": "77041d2ce690e692d6e03cc812b57d1ddaa4d505"
+  },
+  "../game-python": {
+    "rev": "a71c02f269ceeed04938001efcf5a53d7da59abb"
+  },
+  "../packages/contracts/lib/openzeppelin-contracts": {
+    "rev": "e4f70216d759d8e6a64144a9e1f7bbeed78e7079"
+  },
+  "../packages/contracts/lib/universal-router": {
+    "rev": "3663f6db6e2fe121753cd2d899699c2dc75dca86"
+  },
+  "lib/openzeppelin-contracts-upgradeable": {
+    "tag": {
+      "name": "v5.4.0",
+      "rev": "e725abddf1e01cf05ace496e950fc8e243cc7cab"
+    }
+  },
+  "lib/v3-periphery": {
+    "rev": "c11c21400d39f6ea6d63f593b49cf98eeb4c3c0f"
+  },
+  "../packages/contracts/lib/v4-core": {
+    "rev": "a7cf038cd568801a79a9b4cf92cd5b52c95c8585"
+  },
+  "../packages/contracts/lib/v4-periphery": {
+    "rev": "eeb3eff28dd5f5f17aa94180fa3610ff59b0e1c8"
+  },
+  "lib/permit2": {
+    "rev": "cc56ad0f3439c502c246fc5cfcc3db92bb8b7219"
+  },
+  "lib/forge-std": {
+    "rev": "b8f065fda83b8cd94a6b2fec8fcd911dc3b444fd"
+  },
+  "lib/v4-periphery": {
+    "rev": "60cd93803ac2b7fa65fd6cd351fd5fd4cc8c9db5"
+  },
+  "../packages/contracts/lib/v3-periphery": {
+    "rev": "c11c21400d39f6ea6d63f593b49cf98eeb4c3c0f"
+  },
+  "lib/v2-core": {
+    "rev": "ee547b17853e71ed4e0101ccfd52e70d5acded58"
+  },
+  "../packages/contracts/lib/permit2": {
+    "rev": "cc56ad0f3439c502c246fc5cfcc3db92bb8b7219"
+  },
+  "../packages/contracts/lib/v3-core": {
+    "rev": "e3589b192d0be27e100cd0daaf6c97204fdb1899"
+  },
+  "lib/v3-core": {
+    "rev": "d8b1c635c275d2a9450bd6a78f3fa2484fef73eb"
+  },
+  "../packages/contracts/lib/v2-core": {
+    "rev": "4dd59067c76dea4a0e8e4bfdda41877a6b16dedc"
+  },
+  "../protocol-contracts": {
+    "rev": "ce22e77af2bc7f8de8629fc82957318c57d8bedb"
+  }
+}

@@ -37,8 +37,8 @@
 [submodule "contracts/lib/openzeppelin-contracts"]
 	path = contracts/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git
-[submodule "contracts/lib/permit-2"]
-	path = contracts/lib/permit-2
+[submodule "contracts/lib/permit2"]
+	path = contracts/lib/permit2
 	url = https://github.com/Uniswap/permit2.git
 [submodule "contracts/lib/universal-router"]
 	path = contracts/lib/universal-router
@@ -61,3 +61,18 @@
 [submodule "contracts/lib/protocol-contracts"]
 	path = contracts/lib/protocol-contracts
 	url = https://github.com/Virtual-Protocol/protocol-contracts.git
+[submodule "contracts/lib/openzeppelin-contracts-upgradeable"]
+	path = contracts/lib/openzeppelin-contracts-upgradeable
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
+[submodule "cds"]
+	path = cds
+	url = https://github.com/coinbase/cds.git
+[submodule "game-python"]
+	path = game-python
+	url = https://github.com/game-by-virtuals/game-python.git
+[submodule "kilolend"]
+	path = kilolend
+	url = https://github.com/tamago-labs/kilolend.git
+[submodule "protocol-contracts"]
+    path = protocol-contracts
+    url = https://github.com/Virtual-Protocol/protocol-contracts.git
