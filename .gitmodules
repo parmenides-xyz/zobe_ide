@@ -58,3 +58,6 @@
 [submodule "contracts/lib/v4-core"]
 	path = contracts/lib/v4-core
 	url = https://github.com/Uniswap/v4-core.git
+[submodule "contracts/lib/protocol-contracts"]
+	path = contracts/lib/protocol-contracts
+	url = https://github.com/Virtual-Protocol/protocol-contracts.git
