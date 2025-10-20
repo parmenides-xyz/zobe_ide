@@ -1,6 +1,7 @@
 # Compiler files
 cache/
 out/
+artifacts/
 
 # Ignores development broadcast logs
 !/broadcast
@@ -10,5 +11,25 @@ out/
 # Docs
 docs/
 
-# Dotenv file
+# Environment variables
 .env
+.env.local
+*.env
+
+# Dependencies
+node_modules/
+lib/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
