@@ -210,23 +210,23 @@ function launchWithAsset(
     // 2. Create pair with WVIRTUAL
     pairAddress = IFFactory(factory).createPair(
         address(token),
-        address(wsei)
+        address(wvirtual)
     );
     
     // 3. Add initial liquidity (bonding curve initialization)
     uint256 tokenAmount = INITIAL_SUPPLY / 2;
-    uint256 seiAmount = _initialPurchase;
+    uint256 virtualAmount = _initialPurchase;
     
     token.transfer(pairAddress, tokenAmount);
-    wsei.deposit{value: seiAmount}();
-    wsei.transfer(pairAddress, seiAmount);
+    wvirtual.deposit{value: virtualAmount}();
+    wvirtual.transfer(pairAddress, virtualAmount);
     
     // 4. Mint LP tokens to establish price
     IFPair(pairAddress).mint(address(this));
     
     // 5. Enable trading
     launched[address(token)] = true;
-    emit TokenLaunched(address(token), pairAddress, tokenAmount, seiAmount);
+    emit TokenLaunched(address(token), pairAddress, tokenAmount, virtualAmount);
 }
 ```
 
