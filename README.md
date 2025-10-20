@@ -42,7 +42,7 @@ The winning proposal (highest sustained YES price) automatically:
 - Graduates from prediction market
 - Launches as tradeable token via Bonding contract
 - Creates liquidity pool with initial backing
-- Begins trading on Sei mainnet
+- Begins trading on Base Sepolia
 
 ## Technical Architecture
 
@@ -116,13 +116,13 @@ await launch_agent_token(winner)
 - Node.js 18+
 - Python 3.11+
 - Docker & Docker Compose
-- Sei wallet with testnet tokens
+- Base wallet (with testnet ETH)
 
 ### Installation
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/parmenides-xyz/kurtosis-sei.git
+git clone https://github.com/parmenides-xyz/zobe_ide.git
 cd zobeide
 ```
 
