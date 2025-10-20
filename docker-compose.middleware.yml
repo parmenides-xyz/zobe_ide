@@ -1,0 +1,49 @@
+services:
+  zobeide-middleware:
+    image: parmenidesxyz/zobeide-middleware:latest
+    container_name: zobeide-middleware
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - ENV=${ENV:-production}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      # Blockchain config
+      - RPC_URL=${RPC_URL}
+      - CHAIN_ID=${CHAIN_ID:-84532}
+      # Contract addresses
+      - MARKET_ADDRESS=${MARKET_ADDRESS}
+      - BONDING_ADDRESS=${BONDING_ADDRESS}
+      - FACTORY_ADDRESS=${FACTORY_ADDRESS}
+      - POOL_SWAP_TEST=${POOL_SWAP_TEST}
+      - POOL_MANAGER=${POOL_MANAGER}
+      - WVIRTUAL_ADDRESS=${WVIRTUAL_ADDRESS}
+      - MOCK_USDC_ADDRESS=${MOCK_USDC_ADDRESS}
+      - RESOLVER_ADDRESS=${RESOLVER_ADDRESS}
+      # Private keys and API keys
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ALLORA_API_KEY=${ALLORA_API_KEY}
+      - GAME_API_KEY=${GAME_API_KEY}
+      # API Configuration
+      - API_HOST=${API_HOST:-0.0.0.0}
+      - API_PORT=${API_PORT:-8000}
+      # Allora Network
+      - ALLORA_API_URL=${ALLORA_API_URL:-https://api.allora.network}
+      # Trading config
+      - NUM_TRADERS=${NUM_TRADERS:-20}
+      - NUM_PROPOSAL_AGENTS=${NUM_PROPOSAL_AGENTS:-10}
+      - FAUCET_AMOUNT=${FAUCET_AMOUNT:-10000}
+    volumes:
+      - zobeide-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  zobeide-data:

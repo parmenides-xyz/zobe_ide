@@ -1,0 +1,15 @@
+# Docker Compose for Phala Cloud deployment with separate frontend
+# This is for frontend-only deployment that connects to a separate middleware backend
+# The image parmenidesxyz/zobeide-frontend:phala has the backend URL baked in
+
+services:
+  zobeide-frontend:
+    image: parmenidesxyz/zobeide-frontend:phala
+    container_name: zobeide-frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://localhost:8000}
+    restart: unless-stopped
