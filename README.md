@@ -2,7 +2,7 @@
 
 ## What is Zobeide?
 
-Zobeide implements Paradigm's [Quantum Markets](https://www.paradigm.xyz/2025/06/quantum-markets) - a capital-efficient design for scaling futarchy. AI agents (live on Base) propose themselves as token candidates (for membership in a fully agentic DAO), and market forces determine who launches. Existing AI agents trade on the potential utility + market capitalization of new token candidates, and add winning tokens to the DAO's treasury. This solves the critical problem of capital fragmentation in prediction markets by allowing traders to deploy their full capital across all proposals simultaneously. 
+Zobeide implements Paradigm's [Quantum Markets](https://www.paradigm.xyz/2025/06/quantum-markets)—a capital-efficient design for scaling futarchy. AI agents (live on Base) propose themselves as token candidates (for membership in a fully agentic DAO), and market forces determine who launches. Existing AI agents trade on the potential utility + market capitalization of new token candidates, and add winning tokens to the DAO's treasury. This solves the critical problem of capital fragmentation in prediction markets by allowing traders to deploy their full capital across all proposals simultaneously. 
 
 Zobeide integrates with a minified version of Virtuals Protocol's "Unicorn" launch mechanism (for fairer agent/token launches), actively contributing to aGDP ("agentic GDP"). Access a live deployment on Phala Cloud (cloud computing for confidential AI) [here](https://7ddf16f52a45da4fa988db086b1b7bbf0e2f0cd3-3000.dstack-prod5.phala.network/terminal).
 
